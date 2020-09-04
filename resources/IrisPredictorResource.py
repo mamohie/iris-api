@@ -19,10 +19,8 @@ def predict_knn(features, model):
     """
     
     classes = ['setosa', 'versicolor', 'virginica']
-    """
-    TODO: 
-    predict the class!
-    """
+    listed_features = [features]
+    prediceted_class = model.predict(listed_features)
     return predicted_class
 
 ### resource
@@ -40,7 +38,11 @@ class IrisPredictorResource():
     
     def on_post(self, req, resp):
         """
-        TODO: Documentation
+        This function takes an input file (req), calls the prediction function and changes the
+        resp accordingly 
+        Args:
+            req(json): Input file that includes the features
+            resp(json): Response that includes status and body
         """
         try:
             self.logger.info("IrisPredictor: reading file")
@@ -54,12 +56,23 @@ class IrisPredictorResource():
                 resp.status = falcon.HTTP_400
                 resp.body = "Invalid JSON\n"
                 return
-            """
-            @TODO: 
-            check the quality of the input file.
-            In case the quality of the input is not valid, 
-            send back the correct resp.body and resp.status
-            """
+            
+            if 'features' not in request:
+                resp.status = falcon.HTTP_400
+                resp.body = "Invalid JSON\n"
+                return
+
+            features = request['features']
+
+            if not isinstance(features, list):
+                resp.status = falcon.HTTP_400
+                resp.body = "Invalid JSON, features must be a list\n"
+                return
+
+            if len(features) != 4:
+                resp.status = falcon.HTTP_400
+                resp.body = "Invalid JSON, features must 4\n"
+                return
 
             ## In this part, you consider the input is correct and 
             ## just need to return the result
@@ -70,10 +83,7 @@ class IrisPredictorResource():
 
             self.logger.info('IrisPredictor: Sending the results \n')
             
-            """
-            TODO: use the correct HTTP status code
-            """
-            resp.status = ## FILL HERE! ##
+            resp.status = falcon.HTTP_200
             resp.body = json.dumps(response) + '\n'
 
         except Exception as e:
