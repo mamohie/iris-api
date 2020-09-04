@@ -21,6 +21,8 @@ RUN apt-get install -y procps vim
 # Install any needed packages specified in requirements.txt
 # TODO: add correct python libraries 
 RUN conda install -c conda-forge gevent
+RUN conda install -c conda-forge sklearn
+RUN conda install -c conda-forge pyyaml
 RUN conda install -c conda-forge gunicorn>=19.0
 RUN conda install -c conda-forge falcon>=2.0
 
